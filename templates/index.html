@@ -9,5 +9,14 @@
 <body>
     <h1>Welcome to Cookbook!</h1>
     
+    {% if result %}
+    
+    {% for row in result %}
+    
+        {{ row.recipeName }}
+    
+    {% endfor %}
+    {% endif %}
+    
 </body>
 </html>
