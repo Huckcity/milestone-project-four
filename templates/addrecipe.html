@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+
+    <h1>Add Recipe</h1>
+
+    <form class="col s6" action="{{ url_for('addrecipe') }}" method="POST">
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="title" type="text" class="validate">
+                <label for="title">Title</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea name="description" class="materialize-textarea"></textarea>
+                <label for="description">Instructions</label>
+            </div>
+        </div>
+
+        <p>
+            <label>
+                <input type="checkbox" name="recipeGF" class="filled-in" />
+                <span>Gluten Free</span>
+            </label>
+        </p>
+
+        <button class="btn waves-effect waves-light" type="submit" name="action">Add Recipe
+            <i class="material-icons right">send</i>
+        </button>
+    </form>
+</div>
+
+{% endblock %}

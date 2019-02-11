@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Recipes</h1>
+
+{% for recipe in recipes %}
+<p>{{ recipe }}</p>
+{% endfor %}
+
+<a href="{{ url_for('addrecipe') }}"class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+
+{% endblock %}
