@@ -47,9 +47,13 @@ class Database:
         
     def add_recipe(self, title, description, recipeGF, username):
         
+        userID = self.get_user_id(username)
+        
         try:
             
-            self.cur.execute("INSERT INTO recipes (recipeName, recipeDesc, recipeAdded, recipeGF, recipeAuthor) VALUES ('title', 'description', NOW(), 'recipeGF', 'username')")
+            sql = ("INSERT INTO recipes (recipeName, recipeDesc, recipeAdded, recipeGF, recipeAuthor) VALUES (%s, %s, NOW(), %s, %s)")
+            vals = (title, description, recipeGF, userID)
+            self.cur.execute(sql, vals)
             self.con.commit()
             result = True
             
@@ -57,5 +61,14 @@ class Database:
             
             self.con.rollback() #rollback if any exception occured
             result = False
+            print error
             
         return result
+        
+    def get_user_id(self, username):
+    
+        sql = ("SELECT userID FROM users where userName = %s")
+        vals = (username)
+        self.cur.execute(sql, vals)
+        result = self.cur.fetchone()
+        return result['userID']

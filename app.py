@@ -71,7 +71,10 @@ def addrecipe():
     
         title = request.form['title']
         description = request.form['description']
-        recipeGF = request.form.get['recipeGF']
+        if request.form.get('recipeGF'):
+            recipeGF = True
+        else:
+            recipeGF = False
         
         if Database().add_recipe(title, description, recipeGF, session['user']):
 
