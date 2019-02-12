@@ -3,10 +3,10 @@ import pymysql
 class Database:
     
     def __init__(self):
-        host = "sql2.freesqldatabase.com"
-        user = "sql2278391"
-        password = "zW4!eF6%"
-        db = "sql2278391"
+        host = "eu-cdbr-west-02.cleardb.net"
+        user = "b0f4c5cc5bb9e5"
+        password = "ff6aa9b1"
+        db = "heroku_3d6b51f0846c02a"
         self.con = pymysql.connect(host=host, user=user, password=password, db=db, cursorclass=pymysql.cursors.
                                    DictCursor)
         self.cur = self.con.cursor()
@@ -61,7 +61,6 @@ class Database:
             
             self.con.rollback() #rollback if any exception occured
             result = False
-            print error
             
         return result
         
