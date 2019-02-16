@@ -1,12 +1,52 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-<h1>Recipes</h1>
+<h2>Recipes</h2>
 
-{% for recipe in recipes %}
-<p>{{ recipe }}</p>
-{% endfor %}
+<div class="right">
+    <span class="title">Add new recipe&nbsp;</span>
+    <a href="{{ url_for('addrecipe') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+</div>
 
-<a href="{{ url_for('addrecipe') }}"class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+<div style="clear: both"></div>
+
+<div class="row">
+    <ul class="collapsible">
+
+        {% for recipe in recipes %}
+
+        <li>
+            <div class="collapsible-header"><i class="material-icons">local_dining</i>{{ recipe['recipeName'] }}</div>
+            <div class="collapsible-body">
+                <div>
+                    <ul>
+                        <li>Serves: {% for i in range(recipe['recipeServes']|int) %}<i class="tiny material-icons">person</i>{% endfor %}</li>
+                        <li>Gluten Free: <b>{% if recipe['recipeGF']==1 %} Yes {% else %} No {% endif %}</b></li>
+                        <li>Vegan: <b>{% if recipe['recipeVegan']==1 %} Yes {% else %} No {% endif %}</b></li>
+                    </ul>
+                </div>
+
+                <div class="recipe-instructions">
+                    <h6>Instructions:</h6>
+                    <div>
+                        {{ recipe['recipeDesc'] }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="right">
+                        <a href="{{ url_for('recipe', recipeID=recipe['recipeID']) }}" class="waves-effect waves-light btn">View</a>
+                        <a href="{{ url_for('editrecipe', recipeID=recipe['recipeID']) }}" class="waves-effect waves-light btn blue">Edit</a>
+                        <a href="" class="waves-effect waves-light btn red">Delete</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+</div>
+
 
 {% endblock %}

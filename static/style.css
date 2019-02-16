@@ -1,0 +1,16 @@
+html, body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.inline {
+    display: inline;
+}
+
+.title {
+    font-size: 1.1em;
+    text-transform: capitalize;
+}
+
+.recipe-instructions {
+    margin-top: 30px;
+}

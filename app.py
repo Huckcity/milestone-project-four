@@ -1,9 +1,14 @@
 import os
 from flask import Flask, render_template, request, session, redirect, url_for
 from db import *
+import logging
 
 app = Flask(__name__)
 app.secret_key = "SECRETKEY"
+
+def auth_check():
+    
+    return redirect(url_for('login'))
 
  ########### LOGIN PAGE ###########
 
@@ -18,6 +23,7 @@ def login():
         if Database().find_user(uname, password):
             
             session['user'] = uname
+            session['userID'] = Database().get_user_id(uname)
             return redirect(url_for('home'))
             
         else:
@@ -67,17 +73,37 @@ def signup():
 @app.route("/addrecipe", methods=['POST', 'GET'])
 def addrecipe():
     
+    auth_check()
+    
+    categories = Database().get_categories()
+    ingredients = Database().get_ingredients()
+    
     if request.method == "POST":
     
         title = request.form['title']
+        category = request.form['category']
+        serves = request.form['serves']
         description = request.form['description']
-        if request.form.get('recipeGF'):
-            recipeGF = True
-        else:
-            recipeGF = False
         
-        if Database().add_recipe(title, description, recipeGF, session['user']):
+        numIngredients = request.form['ingredientsCount']
+        ingredientsDict = {}
+        
+        for i in range(1, int(numIngredients)+1):
 
+            ingName = "ingredient" + str(i)
+            ingQuanName = "iQ" + str(i)
+            
+            if ingName in request.form:
+                ingredientID = request.form[ingName]
+                ingredientQuantity = request.form[ingQuanName]
+
+                ingredientsDict[ingredientID] = ingredientQuantity
+        
+        recipeGF = True if request.form.get('recipeGF') else False
+        recipeVegan = True if request.form.get('recipeVegan') else False
+        
+        if Database().add_recipe(title, category, serves, description, recipeGF, recipeVegan, session['user'], ingredientsDict):
+            
             return redirect(url_for('recipes'))
             
         else:
@@ -86,7 +112,7 @@ def addrecipe():
             
     else:
     
-        return render_template('addrecipe.html')
+        return render_template('addrecipe.html', categories = categories, ingredients = ingredients)
     
     
 
@@ -95,9 +121,28 @@ def addrecipe():
 @app.route("/recipes")
 def recipes():
     
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
+        
     recipes = Database().list_recipes()
     
-    return render_template('recipes.html', recipes = recipes)
+    return render_template('recipes.html', recipes = recipes, uname = session['user'], userID = session['userID'])
+    
+@app.route("/recipe")
+def recipe():
+    
+    recipeID = request.args.get('recipeID')    
+    recipe = Database().get_recipe(recipeID)
+    
+    return render_template('recipe.html', recipe = recipe)
+    
+@app.route("/editrecipe")
+def editrecipe():
+    
+    recipeID = request.args.get('recipeID')    
+    recipe = Database().get_recipe(recipeID)
+    
+    return render_template('editrecipe.html', recipe = recipe)
     
 @app.route("/about")
 def about():
@@ -106,7 +151,10 @@ def about():
 @app.route("/home")
 def home():
     
-    return render_template('home.html', uname = session['user'])
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
+        
+    return render_template('home.html', uname = session['user'], userID = session['userID'])
 
 
 @app.route("/")

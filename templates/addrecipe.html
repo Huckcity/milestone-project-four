@@ -1,15 +1,38 @@
 {% extends "base.html" %} {% block content %}
 <div class="container">
 
-    <h1>Add Recipe</h1>
+    <h2>Add Recipe</h2>
 
-    <form class="col s6" action="{{ url_for('addrecipe') }}" method="POST">
+    <form class="row s6" action="{{ url_for('addrecipe') }}" method="POST">
 
         <div class="row">
             <div class="input-field col s12">
                 <input name="title" type="text" class="validate">
                 <label for="title">Title</label>
             </div>
+        </div>
+        <div class="input-field col s12">
+            <select name="category">
+                <option value="" disabled selected>Choose category</option>
+                {% for category in categories %}
+                    <option value="{{ category['categoryID'] }}">{{ category['categoryName'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="input-field col s12">
+            <select name="serves">
+                <option value="" disabled selected>Number of servings</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
         </div>
 
         <div class="row">
@@ -19,17 +42,93 @@
             </div>
         </div>
 
-        <p>
-            <label>
+        <div class="col s6">
+            <select class="ingredients-select" onChange>
+                <option value="" disabled selected>Ingredients</option>
+                {% for ingredient in ingredients %}
+                    <option class="browser-default" value="{{ ingredient['ingredientID'] }}">{{ ingredient['ingredientName'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col s3">
+            <input type="text" class="quantity " placeholder="Quantity" />
+        </div>
+
+        <div class="col s3">
+            <button class="btn waves-effect waves-light" id="add_ingredient" type="button" onclick="addIngredient()" disabled="disabled">Add ingredient
+                <i class="material-icons right">send</i>
+            </button>
+        </div>
+
+        <div class="col s12" id="ingredients-container">
+
+        </div>
+        <input type="hidden" name="ingredientsCount" />
+
+        <div class="col s12">
+            <p>
+                <label>
                 <input type="checkbox" name="recipeGF" class="filled-in" />
                 <span>Gluten Free</span>
             </label>
-        </p>
+            </p>
 
-        <button class="btn waves-effect waves-light" type="submit" name="action">Add Recipe
+            <p>
+                <label>
+                <input type="checkbox" name="recipeVegan" class="filled-in" />
+                <span>Vegan</span>
+            </label>
+            </p>
+        </div>
+
+        <button class="right btn waves-effect waves-light" type="submit" name="action">Add Recipe
             <i class="material-icons right">send</i>
         </button>
     </form>
 </div>
+
+<script type="text/javascript">
+    $(".ingredients-select").change(function() {
+        $(".quantity").val("")
+        $('#add_ingredient').removeAttr("disabled");
+    });
+
+    i = 0;
+
+    function addIngredient() {
+
+        i++;
+
+        $('input[name="ingredientsCount"]').val(i);
+
+        $('#ingredients-container').append(`
+        
+        <div class="col s12" id="ingredient` + i + `">
+            <div class="col s6">
+                <input type="hidden" name="ingredient` + i + `" value="` + $(".ingredients-select :selected").val() + `" />
+                <input type="text" value="` + $(".ingredients-select :selected").text() + `" disabled="disabled" />
+            </div>
+            <div class="col s4">
+                <input type="hidden" name="iQ` + i + `" value="` + $(".quantity").val() + `" />
+                <input type="text" value="` + $(".quantity").val() + `" disabled="disabled" />
+            </div>
+            
+            <div class="col s2">
+                <button class="btn-floating btn-med waves-effect waves-light red" type="button" onclick="popIngredient(` + i + `)">
+                    <i class="material-icons">cancel</i>
+                </button>
+            </div>
+        </div>
+        
+        `)
+    }
+
+    function popIngredient(i) {
+
+        $("#ingredient" + i).remove()
+    }
+
+</script>
 
 {% endblock %}
