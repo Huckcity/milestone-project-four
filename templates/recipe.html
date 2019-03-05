@@ -1,5 +1,92 @@
 {% extends "base.html" %} {% block content %}
 
-<h2>{{ recipe['recipeName'] }}</h2>
+<h2></h2>
+
+<div class="row">
+    <div class="col s12">
+        <div class="card">
+            <div class="card-image">
+                <img src="static/images/category{{ recipe['recipeCategory'] }}.png">
+                <span class="name card-title">{{ recipe['recipeName'] }}</span>
+            </div>
+            <div class="card-info-area">
+                <h3>{{ recipe['recipeName'] }}</h3>
+                <div>
+                    <ul>
+                        <li>Serves: <i class="tiny material-icons">person</i> {{ recipe['recipeServes'] }}</li>
+                        <li>Gluten Free: <b>{% if recipe['recipeGF']==1 %} <i class="tiny material-icons">check</i> {% else %} <i class="tiny material-icons">close</i> {% endif %}</b></li>
+                        <li>Vegan: <b>{% if recipe['recipeVegan']==1 %} <i class="tiny material-icons">check</i> {% else %} <i class="tiny material-icons">close</i> {% endif %}</b></li>
+                        <li>Cooking Time:</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-content">
+                <h4>Instructions</h4>
+
+                {% if recipe.recipeDesc == '' %}
+                <p>No instructions yet, click <a href="{{ url_for('editrecipe', recipeID=recipe['recipeID']) }}">here</a> to update this recipe.</p>
+                {% else %}
+                <p>{{ recipe['recipeDesc'] }}</p>
+                {% endif %}
+
+                <h5>Ingredients</h5>
+                <div class="ingredients-area">
+
+                    {% if ingredients|length
+                    < 1 %} <p>No instructions yet, click <a href="{{ url_for('editrecipe', recipeID=recipe['recipeID']) }}">here</a> to update this recipe.</p>
+                        {% else %}
+                        <ul>
+                            {% for ingredient in ingredients %}
+
+                            <li>{{ingredient['ingredientName']}}, {{ingredient['riQuantity']}}</li>
+
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                </div>
+
+            </div>
+
+
+            <div class="card-action">
+                <div class="left">
+                    <div class="likes-views">
+                        <i class="material-icons">remove_red_eye</i> {{ recipe['recipeViews'] }}
+                    </div>
+                    <div class="likes-views">
+                        <a href="#" onclick="addLike({{recipe.recipeID}})"><i class="material-icons">thumb_up</i></a> {{ recipe['recipeVotes'] }}
+                    </div>
+                </div>
+                <div class="right-align">
+                    <a href="{{ url_for('editrecipe', recipeID=recipe['recipeID']) }}" class="waves-effect waves-light btn-small blue">Edit</a>
+                    <a href="{{ url_for('deleterecipe', recipeID=recipe['recipeID']) }}" class="waves-effect waves-light btn-small red" onclick="return confirm('Are you sure you want to delete this recipe?')">Delete</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function addLike(recipeID) {
+
+        //add ingredient
+        $.ajax({
+            url: '/addlike?recipeID='+recipeID,
+            type: 'POST',
+            success: function() {
+                alert('Thanks for liking this recipe!');
+                location.reload();
+
+            },
+            error: function() {
+                alert('You have already liked this recipe!');
+            }
+        });
+
+    }
+</script>
+
 
 {% endblock %}

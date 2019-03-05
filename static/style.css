@@ -1,5 +1,18 @@
-html, body {
+html,
+body {
+    margin: 0;
+    padding: 0;
     font-family: "Montserrat", sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
 }
 
 .inline {
@@ -7,10 +20,139 @@ html, body {
 }
 
 .title {
-    font-size: 1.1em;
+    font-size: 1.2em;
+    font-weight: bold;
     text-transform: capitalize;
 }
 
-.recipe-instructions {
-    margin-top: 30px;
+.recipe-details {
+    padding-top: 0px;
 }
+
+.recipe-details li {
+    display: inline;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.recipe-details li i {
+    line-height: 18px;
+}
+
+.recipe-instructions {
+    padding-top: 10px;
+}
+
+.mobile-nav-heading {
+    color: #000;
+    font-size: 1em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.likes-views {
+    display: inline-block;
+    width: 100px;
+    color: #888;
+}
+
+.ingredients-area {
+    display: inline-block;
+    height: 100px;
+}
+
+.common-ingredients li {
+    display: inline;
+    margin-right: 15px;
+    padding: 7px 5px 7px 12px;
+    background-color: #AAA;
+    border: 1px solid #999;
+    border-radius: 15px;
+    font-size: 0.8em;
+    color: #fff;
+}
+
+.common-number {
+    margin-left: 4px;
+    background-color: #fff;
+    color: #888;
+    border: 1px solid #888;
+    border-radius: 15px;
+    padding: 2px 7px;
+}
+
+.select-label {
+    font-size: .8em;
+    color: #9e9e9e;
+    margin-left: 12px;
+}
+
+
+
+
+
+/* MaterializeCSS Edits */
+
+.dropdown-content {
+    top: 100% !important;
+}
+
+.card-content {
+    padding: 5px 15px !important;
+}
+
+.card-image {
+    width: 190px !important;
+    display: inline-block;
+}
+
+.card-info-area {
+    display: inline-block;
+    vertical-align: top;
+    padding: 15px;
+}
+
+.card-info-area h3 {
+    margin-top: 0;
+    text-transform: capitalize;
+}
+
+.material-icons {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+
+/* COLOR FIXES */
+
+/*nav {*/
+
+/* background-color: #011627 !important;*/
+
+/*}*/
+
+/*footer {*/
+
+/*    background-color: #011627 !important;*/
+
+/*}*/
+
+/*.blue {*/
+
+/*    background-color: #4286f4 !important;*/
+
+/*}*/
+
+/*.red {*/
+
+/*    background-color: #cc1848 !important;*/
+
+/*}*/
+
+/*.green {*/
+
+/*    background-color: #1f8379 !important;*/
+
+/*}*/
+
+/* COLOR FIXES */

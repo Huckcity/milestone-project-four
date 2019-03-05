@@ -1,0 +1,63 @@
+{% extends "base.html" %} {% block content %}
+
+<h2>Ingredients</h2>
+
+<div class="right">
+    <span class="title">Add new ingredient&nbsp;</span>
+    <a href="#" class="btn-floating btn-large waves-effect waves-light red" onclick="addIngredient()"><i class="material-icons">add</i></a>
+</div>
+
+<div class="row">
+
+
+    <div id="ingredients">
+
+    <form method="POST">
+        <input class="search" name="ingredient" placeholder="Search Ingredients" />
+    </form>
+        <ul class="pagination"></ul>
+        <ul class="collection list">
+
+            {% for ingredient in ingredients %}
+
+            <li class="collection-item">
+                <p class="name">{{ ingredient['ingredientName'] }}</p>
+            </li>
+
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    function addIngredient() {
+
+        ingredient = $('.search').val();
+        if ($('.collection-item').length) {
+            alert('Please refine your search!');
+        } else {
+            //add ingredient
+            $.ajax({
+                url: '/addingredient',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function(response) {
+                    alert(ingredient+' added!');
+                    $('.search').val('');
+                    location.reload();
+                },
+                error: function(error) {
+                    console.log(error);
+                    alert('There was an error, please try again later!');
+                }
+            });
+            
+        }
+        
+    }
+</script>
+
+
+{% endblock %}

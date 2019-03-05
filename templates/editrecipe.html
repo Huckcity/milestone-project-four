@@ -1,5 +1,168 @@
 {% extends "base.html" %} {% block content %}
+<div class="container">
 
-<h2>{{ recipe['recipeName'] }}</h2>
+    <h2>Edit Recipe</h2>
+
+    <form class="row s6" action="" method="POST">
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="title" type="text" class="validate" value="{{recipe.recipeName}}">
+                <label for="title">Title</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="select-label">Category</div>
+
+            <div class="input-field col s12">
+                <select name="category">
+                    <option value="" disabled>Choose category</option>
+                    {% for category in categories %}
+                        <option {% if recipe.recipeCategory == category.categoryID %} selected {% endif %}value="{{ category.categoryID }}">{{ category.categoryName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="select-label">Serves</div>
+
+            <div class="input-field col s12">
+                <select name="serves">
+                    {% for n in range(1,10) %}
+                        <option {% if recipe.recipeServes == n %}selected{% endif %} value="{{n}}">{{n}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea name="description" class="materialize-textarea">{{recipe.recipeDesc}}</textarea>
+                <label for="description">Instructions</label>
+            </div>
+        </div>
+
+        <div class="col s6">
+            <select class="browser-default ingredients-select" id="ingredientsSelect">
+                <option value="" disabled selected>Add ingredients</option>
+                {% for ingredient in ingredients %}
+                    <option value="{{ ingredient['ingredientID'] }}">{{ ingredient['ingredientName'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col s3">
+            <input type="text" class="quantity " placeholder="Quantity" />
+        </div>
+
+        <div class="col s3">
+            <button class="btn waves-effect waves-light" id="add-ingredient" type="button" onclick="addIngredient()" disabled="disabled">Add ingredient
+                <i class="material-icons right">send</i>
+            </button>
+        </div>
+
+        <div class="col s12" id="ingredients-container">
+
+            {% for rIngredient in recipeIngredients %}
+
+            <div class="col s12" id="ingredient{{rIngredient.ingredientID}}">
+                <div class="col s6">
+                    <input type="text" value="{{rIngredient.ingredientName}}" disabled="disabled" />
+                </div>
+                <div class="col s4">
+                    <input type="text" value="{{rIngredient.riQuantity}}" disabled="disabled" />
+                </div>
+
+                <div class="col s2">
+                    <button class="btn-floating btn-med waves-effect waves-light red" type="button" onclick="addToRemoveList({{rIngredient.ingredientID}})">
+                    <i class="material-icons">cancel</i>
+                </button>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+        <input type="hidden" name="ingredientsCount" />
+        <input type="hidden" name="removeList" />
+
+        <div class="col s12">
+            <p>
+                <label>
+                <input type="checkbox" name="recipeGF" class="filled-in" {% if recipe.recipeGF == 1 %}checked{% endif %} />
+                <span>Gluten Free</span>
+            </label>
+            </p>
+
+            <p>
+                <label>
+                <input type="checkbox" name="recipeVegan" class="filled-in" {% if recipe.recipeVegan == 1 %}checked{% endif %} />
+                <span>Vegan</span>
+            </label>
+            </p>
+        </div>
+
+        <button class="right btn waves-effect waves-light" type="submit" name="action">Edit Recipe
+            <i class="material-icons right">send</i>
+        </button>
+    </form>
+</div>
+
+<script type="text/javascript">
+    new Selectr(document.getElementById('ingredientsSelect'));
+
+    i = 0;
+
+    function addIngredient() {
+
+        i++;
+
+        $('input[name="ingredientsCount"]').val(i);
+
+        $('#ingredients-container').append(`
+        
+        <div class="col s12" id="newIngredient` + i + `">
+            <div class="col s6">
+                <input type="hidden" name="newIngredient` + i + `" value="` + $(".ingredients-select :selected").val() + `" />
+                <input type="text" value="` + $(".ingredients-select :selected").text() + `" disabled="disabled" />
+            </div>
+            <div class="col s4">
+                <input type="hidden" name="newIQ` + i + `" value="` + $(".quantity").val() + `" />
+                <input type="text" value="` + $(".quantity").val() + `" disabled="disabled" />
+            </div>
+            
+            <div class="col s2">
+                <button class="btn-floating btn-med waves-effect waves-light red" type="button" onclick="popNewIngredient(` + i + `)">
+                    <i class="material-icons">cancel</i>
+                </button>
+            </div>
+        </div>
+        
+        `);
+
+        $(".ingredients-select").prop('selectedIndex', 0);
+        $(".quantity").val('');
+    }
+
+    function popIngredient(i) {
+
+        $("#ingredient" + i).remove();
+    }
+    
+    function popNewIngredient(i) {
+
+        $("#newIngredient" + i).remove();
+    }
+    
+    removeList = []
+    function addToRemoveList(i) {
+        popIngredient(i);
+        removeList.push(i);
+        $('input[name="removeList"]').val(removeList);
+        console.log(removeList)
+    }
+</script>
 
 {% endblock %}

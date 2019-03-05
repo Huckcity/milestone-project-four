@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, session, redirect, url_for
+import json
 from db import *
-import logging
 
 app = Flask(__name__)
 app.secret_key = "SECRETKEY"
@@ -68,7 +68,7 @@ def signup():
     
         return render_template('signup.html')
         
-########### ADD RECIPES PAGE ###########
+########### RECIPE PAGES ###########
 
 @app.route("/addrecipe", methods=['POST', 'GET'])
 def addrecipe():
@@ -114,9 +114,6 @@ def addrecipe():
     
         return render_template('addrecipe.html', categories = categories, ingredients = ingredients)
     
-    
-
-########### STATIC PAGES ###########
 
 @app.route("/recipes")
 def recipes():
@@ -124,25 +121,142 @@ def recipes():
     if session.get('userID') is None:
         return redirect(url_for('login'))
         
-    recipes = Database().list_recipes()
+    if request.args.get('ingredientID'):
+        recipes = Database().list_recipes_by_ingredient(request.args.get('ingredientID'))
+    else:
+        recipes = Database().list_recipes()
+        
+    commonIngredients = Database().get_common_ingredients()
     
-    return render_template('recipes.html', recipes = recipes, uname = session['user'], userID = session['userID'])
+    return render_template('recipes.html', recipes = recipes, commonIngredients = commonIngredients, uname = session['user'], userID = session['userID'])
     
 @app.route("/recipe")
 def recipe():
     
     recipeID = request.args.get('recipeID')    
     recipe = Database().get_recipe(recipeID)
+    recipeIngredients = Database().get_ingredients_for_recipe(recipeID)
     
-    return render_template('recipe.html', recipe = recipe)
+    userID = session['userID']
     
-@app.route("/editrecipe")
+    Database().add_view(recipeID)
+    
+    return render_template('recipe.html', recipe = recipe, ingredients = recipeIngredients, userID = userID)
+    
+@app.route("/editrecipe", methods=['POST', 'GET'])
 def editrecipe():
     
-    recipeID = request.args.get('recipeID')    
+    recipeID = request.args.get('recipeID')
+    categories = Database().get_categories()
     recipe = Database().get_recipe(recipeID)
+    ingredients = Database().get_ingredients()
+    recipeIngredients = Database().get_ingredients_for_recipe(recipeID)
     
-    return render_template('editrecipe.html', recipe = recipe)
+    if request.method == "POST":
+    
+        recipeID = request.args.get('recipeID')
+        title = request.form['title']
+        category = request.form['category']
+        serves = request.form['serves']
+        description = request.form['description']
+        
+        numIngredients = request.form['ingredientsCount']
+        ingredientsDict = {}
+        
+        if numIngredients:
+            for i in range(1, int(numIngredients)+1):
+    
+                ingName = "newIngredient" + str(i)
+                ingQuanName = "newIQ" + str(i)
+                
+                if ingName in request.form:
+                    ingredientID = request.form[ingName]
+                    ingredientQuantity = request.form[ingQuanName]
+    
+                    ingredientsDict[ingredientID] = ingredientQuantity
+            
+        removedIngredients = request.form['removeList'].split(',')
+        
+        recipeGF = True if request.form.get('recipeGF') else False
+        recipeVegan = True if request.form.get('recipeVegan') else False
+        
+        if Database().edit_recipe(title, category, serves, description, recipeGF, recipeVegan, session['user'], ingredientsDict, removedIngredients, recipeID):
+            
+            return redirect(url_for('recipes'))
+            
+        else:
+        
+            return redirect(url_for('recipes'))
+            
+    else:
+    
+        return render_template('editrecipe.html', recipe = recipe, categories = categories, ingredients = ingredients, recipeIngredients = recipeIngredients)
+    
+    
+@app.route("/deleterecipe")
+def deleterecipe():
+    
+    recipeID = request.args.get('recipeID')
+    Database().delete_recipe(recipeID)
+    
+    return redirect('/recipes')
+    
+    
+############# INGREDIENTS PAGES ############# 
+
+@app.route("/ingredients")
+def ingredients():
+    
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
+        
+    ingredients = Database().get_ingredients()
+    
+    return render_template('ingredients.html', ingredients = ingredients, uname = session['user'], userID = session['userID'])
+    
+
+@app.route('/addingredient', methods=['POST', 'GET'])
+def addingredient():
+    
+    if request.method == "POST":
+    
+        ingredient = request.form['ingredient']
+        
+        if Database().add_ingredient(ingredient):
+            
+            return json.dumps({'status':'OK'});
+            
+        else:
+        
+            return json.dumps({'status':'ERROR'});
+            
+    else:
+        
+        return render_template('addingredient.html')
+    
+
+############# OTHER PAGES ############# 
+
+
+@app.route('/addlike', methods=['POST', 'GET'])
+def addlike():
+    
+    if request.method == "POST":
+    
+        userID = session.get('userID')
+        recipeID = request.args.get('recipeID')
+        
+        if Database().add_like(userID, recipeID):
+            
+            return json.dumps({'status':'success'})
+            
+        else:
+        
+            return abort(400)
+            
+    else:
+        
+        return redirect('recipes')
     
 @app.route("/about")
 def about():
@@ -154,7 +268,9 @@ def home():
     if session.get('userID') is None:
         return redirect(url_for('login'))
         
-    return render_template('home.html', uname = session['user'], userID = session['userID'])
+    recipes = Database().get_liked_recipes(session.get('userID'))
+    
+    return render_template('home.html', recipes = recipes, uname = session['user'], userID = session['userID'])
 
 
 @app.route("/")

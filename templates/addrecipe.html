@@ -43,10 +43,10 @@
         </div>
 
         <div class="col s6">
-            <select class="ingredients-select" onChange>
-                <option value="" disabled selected>Ingredients</option>
+            <select class="browser-default ingredients-select" id="ingredientsSelect">
+                <option value="" disabled selected>Add ingredients</option>
                 {% for ingredient in ingredients %}
-                    <option class="browser-default" value="{{ ingredient['ingredientID'] }}">{{ ingredient['ingredientName'] }}</option>
+                    <option value="{{ ingredient['ingredientID'] }}">{{ ingredient['ingredientName'] }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -56,7 +56,7 @@
         </div>
 
         <div class="col s3">
-            <button class="btn waves-effect waves-light" id="add_ingredient" type="button" onclick="addIngredient()" disabled="disabled">Add ingredient
+            <button class="btn waves-effect waves-light" id="add-ingredient" type="button" onclick="addIngredient()" disabled="disabled">Add ingredient
                 <i class="material-icons right">send</i>
             </button>
         </div>
@@ -89,11 +89,9 @@
 </div>
 
 <script type="text/javascript">
-    $(".ingredients-select").change(function() {
-        $(".quantity").val("")
-        $('#add_ingredient').removeAttr("disabled");
-    });
 
+    new Selectr(document.getElementById('ingredientsSelect'));
+    
     i = 0;
 
     function addIngredient() {
@@ -121,12 +119,15 @@
             </div>
         </div>
         
-        `)
+        `);
+        
+        $(".ingredients-select").prop('selectedIndex',0);
+        $(".quantity").val('');
     }
 
     function popIngredient(i) {
 
-        $("#ingredient" + i).remove()
+        $("#ingredient" + i).remove();
     }
 
 </script>

@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Add Ingredient</h1>
+
+<form class="row" action="{{ url_for('addingredient') }}" method="POST">
+
+    <div class="col s6">
+        <input type="text" name="ingredient" placeholder="Ingredient" />
+    </div>
+
+    <button class="btn waves-effect waves-light" type="submit" name="action">Add Ingredient
+            <i class="material-icons left">add</i>
+        </button>
+
+</form>
+{% endblock %}
