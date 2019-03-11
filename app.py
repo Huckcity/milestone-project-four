@@ -28,7 +28,8 @@ def login():
             
         else:
         
-            return redirect(url_for('login'))
+            msg = "Please check your login details."
+            return render_template('login.html', message = msg)
     
     else:
     
@@ -54,6 +55,17 @@ def signup():
     
         username = request.form['username']
         password = request.form['password']
+        password2 = request.form['repeat_password']
+        
+        if Database().get_user_id(username):
+            
+            error = "Username is taken, please try another!"
+            return render_template('signup.html', message = error)
+            
+        if password != password2:
+            
+            error = "Please check that your passwords match!"
+            return render_template('signup.html', message = error)
         
         if Database().add_user(username, password):
             

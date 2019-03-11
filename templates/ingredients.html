@@ -2,19 +2,17 @@
 
 <h2>Ingredients</h2>
 
-<div class="right">
-    <span class="title">Add new ingredient&nbsp;</span>
-    <a href="#" class="btn-floating btn-large waves-effect waves-light red" onclick="addIngredient()"><i class="material-icons">add</i></a>
-</div>
+<p>Here you can search for ingredients to ensure we have a listing for everything you need. If you don't find your required ingredient, simply click Add Ingredient to add it to the system. Don't worry about quantities, that can be specified when adding a
+    recipe.</p>
 
 <div class="row">
 
-
     <div id="ingredients">
 
-    <form method="POST">
-        <input class="search" name="ingredient" placeholder="Search Ingredients" />
-    </form>
+        <form method="POST">
+            <input class="search" name="ingredient" placeholder="Search Ingredients" />
+            <button class="btn right" type="button" onclick="addIngredient()">Add Ingredient</button>
+        </form>
         <ul class="pagination"></ul>
         <ul class="collection list">
 
@@ -58,6 +56,5 @@
         
     }
 </script>
-
 
 {% endblock %}

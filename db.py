@@ -1,4 +1,4 @@
-import pymysql, logging
+import pymysql
 
 class Database:
     
@@ -20,6 +20,7 @@ class Database:
             
         except pymysql.Error as error :
             
+            print(error)
             self.con.rollback() #rollback if any exception occured
             result = False
             
@@ -28,12 +29,16 @@ class Database:
     def find_user(self, username, password):
         try:
             
-            self.cur.execute("SELECT * FROM users where userName = 'username' AND userPassword = 'password'")
-            self.con.commit()
-            result = True
+            sql = ("SELECT * FROM users where userName = %s AND userPassword = %s")
+            vals = (username, password)
+            self.cur.execute(sql, vals)
+            result = self.cur.fetchone()
+            print(result)
+            return result
             
         except pymysql.Error as error :
             
+            print(error)
             self.con.rollback() #rollback if any exception occured
             result = False
             
@@ -153,7 +158,10 @@ class Database:
         vals = (username)
         self.cur.execute(sql, vals)
         result = self.cur.fetchone()
-        return result['userID']
+        if result is not None:
+            return result['userID']
+        else:
+            return False
         
     def get_categories(self):
         
@@ -245,6 +253,17 @@ class Database:
             vals = (recipeID)
             self.cur.execute(sql, vals)
             self.con.commit()
+            
+            sql = ("DELETE FROM recipeingredients WHERE recipeID = %s LIMIT 1")
+            vals = (recipeID)
+            self.cur.execute(sql, vals)
+            self.con.commit()
+            
+            sql = ("DELETE FROM likedrecipes WHERE recipeID = %s LIMIT 1")
+            vals = (recipeID)
+            self.cur.execute(sql, vals)
+            self.con.commit()
+            
             result = True
             
         except pymysql.Error as error :
