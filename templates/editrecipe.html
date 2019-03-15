@@ -104,6 +104,10 @@
             </p>
         </div>
 
+        <a href="{{ url_for('recipe', recipeID=recipe['recipeID']) }}" class="waves-effect waves-light btn">
+            <i class="material-icons left">clear</i>
+            Cancel
+        </a>
         <button class="right btn waves-effect waves-light" type="submit" name="action">Edit Recipe
             <i class="material-icons right">send</i>
         </button>
@@ -113,7 +117,7 @@
 <script type="text/javascript">
     new Selectr(document.getElementById('ingredientsSelect'));
 
-    i = 0;
+    var i = 0;
 
     function addIngredient() {
 

@@ -6,14 +6,14 @@ from db import *
 app = Flask(__name__)
 app.secret_key = "SECRETKEY"
 
-def auth_check():
-    
-    return redirect(url_for('login'))
 
  ########### LOGIN PAGE ###########
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
+    
+    if session.get('userID'):
+        return redirect(url_for('home'))
     
     if request.method == "POST":
     
@@ -40,6 +40,9 @@ def login():
 @app.route("/logout")
 def logout():
     
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
+    
     for key in session.keys():
      session.pop(key)
      
@@ -50,6 +53,9 @@ def logout():
 
 @app.route("/signup", methods=['POST', 'GET'])
 def signup():
+    
+    if session.get('userID'):
+        return redirect(url_for('home'))
     
     if request.method == "POST":
     
@@ -85,7 +91,8 @@ def signup():
 @app.route("/addrecipe", methods=['POST', 'GET'])
 def addrecipe():
     
-    auth_check()
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
     
     categories = Database().get_categories()
     ingredients = Database().get_ingredients()
@@ -133,17 +140,47 @@ def recipes():
     if session.get('userID') is None:
         return redirect(url_for('login'))
         
-    if request.args.get('ingredientID'):
-        recipes = Database().list_recipes_by_ingredient(request.args.get('ingredientID'))
+    if request.args.get('sort'):
+        order = request.args.get('sort')
     else:
-        recipes = Database().list_recipes()
+        order = ''
+          
+    if request.args.get('ingredientID'):
+        
+        recipes = Database().list_recipes_by_ingredient(request.args.get('ingredientID'), order)
+    else:
+        recipes = Database().list_recipes(order)
         
     commonIngredients = Database().get_common_ingredients()
     
     return render_template('recipes.html', recipes = recipes, commonIngredients = commonIngredients, uname = session['user'], userID = session['userID'])
     
+@app.route("/recipedatabase")
+def recipedatabse():
+    
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
+        
+    if request.args.get('sort'):
+        order = request.args.get('sort')
+    else:
+        order = ''
+        
+    recipes = Database().list_recipes(order)
+    categories = Database().get_categories()
+    allIngredients = Database().get_ingredients()
+    commonIngredients = Database().get_common_ingredients()
+    
+    recipes = json.dumps(recipes, indent=4, sort_keys=True, default=str)
+    commonIngredients = json.dumps(commonIngredients, indent=4, sort_keys=True, default=str)
+    
+    return render_template('recipedatabase.html', recipes = recipes, commonIngredients = commonIngredients, categories = categories, allIngredients = allIngredients, uname = session['user'], userID = session['userID'])
+    
 @app.route("/recipe")
 def recipe():
+    
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
     
     recipeID = request.args.get('recipeID')    
     recipe = Database().get_recipe(recipeID)
@@ -157,6 +194,9 @@ def recipe():
     
 @app.route("/editrecipe", methods=['POST', 'GET'])
 def editrecipe():
+    
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
     
     recipeID = request.args.get('recipeID')
     categories = Database().get_categories()
@@ -207,6 +247,9 @@ def editrecipe():
     
 @app.route("/deleterecipe")
 def deleterecipe():
+    
+    if session.get('userID') is None:
+        return redirect(url_for('login'))
     
     recipeID = request.args.get('recipeID')
     Database().delete_recipe(recipeID)
@@ -290,7 +333,7 @@ def main():
     
     def db_query():
         database = Database()
-        recipes = database.list_recipes()
+        recipes = database.list_recipes('')
         return recipes
     
     results = db_query()

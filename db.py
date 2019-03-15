@@ -1,5 +1,14 @@
 import pymysql
 
+def sortOrder(order):
+    return {
+        '' : '',
+        'vAsc': 'ORDER BY recipeViews ASC',
+        'vDesc': 'ORDER BY recipeViews DESC',
+        'lAsc': 'ORDER BY recipeVotes ASC',
+        'lDesc': 'ORDER BY recipeVotes DESC',
+    }[order]
+
 class Database:
     
     def __init__(self):
@@ -44,17 +53,25 @@ class Database:
             
         return result
     
-    def list_recipes(self):
+    def list_recipes(self, order):
         
-        self.cur.execute("SELECT * FROM recipes")
+        self.cur.execute("SELECT * FROM recipes {0}".format(sortOrder(order)))
         result = self.cur.fetchall()
         return result
         
-    def list_recipes_by_ingredient(self, ingredientID):
+    def list_recipes_by_ingredient(self, ingredientID, order):
         
-        sql =("SELECT * FROM recipes r JOIN recipeingredients ri ON r.recipeID = ri.recipeID WHERE ri.ingredientID = %s")
+        sql =("SELECT * FROM recipes r JOIN recipeingredients ri ON r.recipeID = ri.recipeID WHERE ri.ingredientID = %s {0}".format(sortOrder(order)))
         vals = (ingredientID)
         self.cur.execute(sql, vals)
+        result = self.cur.fetchall()
+        return result
+        
+    def list_recipes_by_order(self, order):
+        
+        sql = ("SELECT * FROM recipes {0}".format(sortOrder(order)))
+        print(sql)
+        self.cur.execute(sql)
         result = self.cur.fetchall()
         return result
         

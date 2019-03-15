@@ -28,8 +28,9 @@
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
 
                     <ul id="recipes-dropdown" class="dropdown-content">
-                        <li><a href="/recipes">All Recipes</a></li>
+                        <li><a href="/recipes">Browse Recipes</a></li>
                         <li><a href="/addrecipe">Add Recipe</a></li>
+                        <li><a href="/recipedatabase">Recipe Database</a></li>
                     </ul>
 
                     {% if session and session['user'] > '' %}
@@ -51,8 +52,9 @@
 
                     <li class="mobile-nav-heading">Recipes
                         <ul>
-                            <li><a href="/recipes">All Recipes</a></li>
+                            <li><a href="/recipes">Browse Recipes</a></li>
                             <li><a href="/addrecipe">Add Recipe</a></li>
+                            <li><a href="/recipedatabase">Recipe Database</a></li>
                         </ul>
                     </li>
 
@@ -107,6 +109,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.1/d3.min.js"></script>
 
     <script type="text/javascript">
         /// MaterializeCSS Init components
@@ -124,7 +127,7 @@
 
         //Add ingredients button enabler
         $("#ingredientsSelect").change(function() {
-            $(".quantity").val("")
+            $(".quantity").val("");
             $('#add-ingredient').removeAttr("disabled");
         });
 

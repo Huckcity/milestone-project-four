@@ -2,6 +2,22 @@
 
 <h2>Recipes</h2>
 
+<div class="right">
+    <div class="center-align">
+        <span class="title">Most Common Ingredients</span>
+        <br>
+        <ul class="common-ingredients">
+            {% for ingredient in commonIngredients %}
+            <a href="{{ url_for('recipes', ingredientID=ingredient['ingredientID']) }}">
+                <li class="col s1">
+                    {{ingredient['ingredientName']}}
+                    <span class="common-number">{{ingredient['numOccurances']}}</span>
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 <div class="row">
 
@@ -9,20 +25,29 @@
 
         <input class="search" placeholder="Search Recipes" />
 
-        <div>
-            <ul class="common-ingredients">
-                {% for ingredient in commonIngredients %}
-                <a href="{{ url_for('recipes', ingredientID=ingredient['ingredientID']) }}">
-                    <li>
-                        {{ingredient['ingredientName']}}
-                        <span class="common-number">{{ingredient['numOccurances']}}</span>
-                    </li>
-                </a>
-                {% endfor %}
-            </ul>
-        </div>
+        <div class="row">        
+            
+            <div class="col">
+                <ul class="pagination"></ul>
+            </div>
+    
 
-        <ul class="pagination"></ul>
+            <div class="col right">
+                <form>
+                    <select id="sort" onchange="sortRecipes(this.value)">
+                        <option selected disabled>Sort Recipes</option>
+                        <option value="vAsc">Views - Ascending</option>
+                        <option value="vDesc">Views - Descending</option>
+                        <option value="lAsc">Likes - Ascending</option>
+                        <option value="lDesc">Likes - Descending</option>
+                    </select>
+                </form>
+            </div>
+
+        </div>
+        
+        <p>{{ recipes | length }} recipes found</p>
+        
         <ul class="list">
 
             {% for recipe in recipes %}
@@ -76,5 +101,28 @@
 
 </div>
 
+<script>
+    function sortRecipes(arg) {
+
+        switch (arg) {
+            case "vAsc":
+                console.log("vAsc");
+                location.replace("{{ url_for('recipes', sort='vAsc') }}");
+                break;
+            case "vDesc":
+                console.log("vDesc");
+                location.replace("{{ url_for('recipes', sort='vDesc') }}");
+                break;
+            case "lAsc":
+                console.log("lAsc");
+                location.replace("{{ url_for('recipes', sort='lAsc') }}");
+                break;
+            case "lDesc":
+                console.log("lDesc");
+                location.replace("{{ url_for('recipes', sort='lDesc') }}");
+                break;
+        }
+    }
+</script>
 
 {% endblock %}
