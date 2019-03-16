@@ -181,9 +181,8 @@ class Database:
             return False
         
     def get_categories(self):
-        
-        sql = ("SELECT * FROM categories")
-        sql = ("SELECT categoryName, COUNT(recipeID) as numOcc FROM recipes join categories on recipeCategory = categoryID group by recipeCategory order by numOcc desc")
+
+        sql = ("SELECT categoryID, categoryName, COUNT(recipeID) as numOcc FROM recipes join categories on recipeCategory = categoryID group by recipeCategory order by numOcc desc")
         self.cur.execute(sql)
         result = self.cur.fetchall()
         return result
@@ -228,11 +227,11 @@ class Database:
             
         return result
         
-    def get_common_ingredients(self):
+    def get_common_ingredients(self, limit):
         
         try:
             
-            sql = ("SELECT ri.ingredientID, i.ingredientName, COUNT(ri.ingredientID) AS numOccurances FROM recipeingredients ri JOIN ingredients i ON ri.ingredientID = i.ingredientID GROUP BY ri.ingredientID ORDER BY numOccurances DESC")
+            sql = ("SELECT ri.ingredientID, i.ingredientName, COUNT(ri.ingredientID) AS numOccurances FROM recipeingredients ri JOIN ingredients i ON ri.ingredientID = i.ingredientID GROUP BY ri.ingredientID ORDER BY numOccurances DESC {0}".format(limit))
             self.cur.execute(sql)
             result = self.cur.fetchall()
             return result
@@ -350,3 +349,12 @@ class Database:
         self.cur.execute(sql, vals)
         result = self.cur.fetchall()
         return result
+        
+    def list_recipes_by_category(self, categoryID):
+        
+        sql = ("SELECT * FROM recipes WHERE recipeCategory = %s")
+        vals = (categoryID)
+        self.cur.execute(sql, vals)
+        result = self.cur.fetchall()
+        return result
+        

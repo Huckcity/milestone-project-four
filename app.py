@@ -151,12 +151,12 @@ def recipes():
     else:
         recipes = Database().list_recipes(order)
         
-    commonIngredients = Database().get_common_ingredients()
+    commonIngredients = Database().get_common_ingredients("LIMIT 5")
     
     return render_template('recipes.html', recipes = recipes, commonIngredients = commonIngredients, uname = session['user'], userID = session['userID'])
     
 @app.route("/recipedatabase", methods=['POST', 'GET'])
-def recipedatabse():
+def recipedatabase():
     
     if session.get('userID') is None:
         return redirect(url_for('login'))
@@ -167,19 +167,18 @@ def recipedatabse():
     
     
     if request.args.get('category'):
-        ingredient = request.args.get('category')
+        category = request.args.get('category')
+        recipes = Database().list_recipes_by_category(category)
 
-    if request.args.get('ingredient'):
+    elif request.args.get('ingredient'):
         ingredient = request.args.get('ingredient')
-
-    if request.args.get('order'):
-        ingredient = request.args.get('order')
-
+        recipes = Database().list_recipes_by_ingredient(ingredient, order)
+    else:
+        recipes = Database().list_recipes(order)
         
-    recipes = Database().list_recipes(order)
     categories = Database().get_categories()
     allIngredients = Database().get_ingredients()
-    commonIngredients = Database().get_common_ingredients()
+    commonIngredients = Database().get_common_ingredients("")
     
     return render_template('recipedatabase.html', recipes = recipes, commonIngredients = commonIngredients, categories = categories, allIngredients = allIngredients, uname = session['user'], userID = session['userID'])
     
