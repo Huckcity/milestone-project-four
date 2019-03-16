@@ -183,6 +183,7 @@ class Database:
     def get_categories(self):
         
         sql = ("SELECT * FROM categories")
+        sql = ("SELECT categoryName, COUNT(recipeID) as numOcc FROM recipes join categories on recipeCategory = categoryID group by recipeCategory order by numOcc desc")
         self.cur.execute(sql)
         result = self.cur.fetchall()
         return result
@@ -231,7 +232,7 @@ class Database:
         
         try:
             
-            sql = ("SELECT ri.ingredientID, i.ingredientName, COUNT(ri.ingredientID) AS numOccurances FROM recipeingredients ri JOIN ingredients i ON ri.ingredientID = i.ingredientID GROUP BY ri.ingredientID ORDER BY numOccurances DESC LIMIT 5")
+            sql = ("SELECT ri.ingredientID, i.ingredientName, COUNT(ri.ingredientID) AS numOccurances FROM recipeingredients ri JOIN ingredients i ON ri.ingredientID = i.ingredientID GROUP BY ri.ingredientID ORDER BY numOccurances DESC")
             self.cur.execute(sql)
             result = self.cur.fetchall()
             return result

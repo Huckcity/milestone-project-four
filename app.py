@@ -155,24 +155,31 @@ def recipes():
     
     return render_template('recipes.html', recipes = recipes, commonIngredients = commonIngredients, uname = session['user'], userID = session['userID'])
     
-@app.route("/recipedatabase")
+@app.route("/recipedatabase", methods=['POST', 'GET'])
 def recipedatabse():
     
     if session.get('userID') is None:
         return redirect(url_for('login'))
-        
-    if request.args.get('sort'):
-        order = request.args.get('sort')
-    else:
-        order = ''
+    
+    order = ''
+    category = ''
+    ingredient = ''
+    
+    
+    if request.args.get('category'):
+        ingredient = request.args.get('category')
+
+    if request.args.get('ingredient'):
+        ingredient = request.args.get('ingredient')
+
+    if request.args.get('order'):
+        ingredient = request.args.get('order')
+
         
     recipes = Database().list_recipes(order)
     categories = Database().get_categories()
     allIngredients = Database().get_ingredients()
     commonIngredients = Database().get_common_ingredients()
-    
-    recipes = json.dumps(recipes, indent=4, sort_keys=True, default=str)
-    commonIngredients = json.dumps(commonIngredients, indent=4, sort_keys=True, default=str)
     
     return render_template('recipedatabase.html', recipes = recipes, commonIngredients = commonIngredients, categories = categories, allIngredients = allIngredients, uname = session['user'], userID = session['userID'])
     
