@@ -16,6 +16,7 @@ To enable the user to achieve these goals we have designed each page to be intui
 - As an unauthorised user, I want to be able to view the about page
 
 <br>
+
 - As an authorised user, I want to be able to view the user home page
 - As an authorised user, I want to be able to view the recipes page
 - As an authorised user, I want to be able to view the add recipe page
@@ -78,6 +79,7 @@ All of the above user stories can be completed with a maximum of two page loads,
 In this section, you should mention all of the languages, frameworks, libraries, and any other tools that you have used to construct this project. For each, provide its name, a link to its official site and a short sentence of why it was used.
 
 - Python
+- MySQL
 - Flask
 - HTML
 - CSS
@@ -86,46 +88,49 @@ In this section, you should mention all of the languages, frameworks, libraries,
     - [Pagination.js](https://pagination.js.org/)
     - [List.js](https://listjs.com/)
 
+- Heroku Hosting Platform
+    - ClearDB MySQL Add-On
+
+
 ## Testing
 
-In this section, you need to convince the assessor that you have conducted enough testing to legitimately believe that the site works well. Essentially, in this part you will want to go over all of your user stories from the UX section and ensure that they all work as intended, with the project providing an easy and straightforward way for the users to achieve their goals.
+In this project I have strived to automate testing as much as possible. Unit testing can be found in [test_cookbook.py](https://github.com/Huckcity/milestone-project-four/blob/master/test_cookbook.py). To run the tests simply perform ```python3 test_cookbook.py```
+These tests ensure all pages and templates are rendered as expected based on whether the user is logged in/out, and also tests CRUD functionality for the recipes database. Unfortunately, having chosen MySQL as the database solution for this project, I discovered the difficulty in testing against a mock database when compared with SQLite or NoSQL options. As such, all tests run against the live database. One solution to this would be to create a second database entirely for testing, but this was discovered towards the end of development and has been left out for submission.
 
-Whenever it is feasible, prefer to automate your tests, and if you've done so, provide a brief explanation of your approach, link to the test file(s) and explain how to run them.
+As per the above <b>user stories</b>, I also manually tested each use case to ensure the correct behavior, for exmaple:
 
-For any scenarios that have not been automated, test the user stories manually and provide as much detail as is relevant. A particularly useful form for describing your testing process is via scenarios, such as:
+- Signup Page
+    1. Try to submit the form with no details provided and ensure the correct error message was displayed.
+    2. Try to submit the form with correct data and ensure the page submitted correctly
+    3. Try to submit the form with mismatched passwords and ensure the correct error message was displayed
 
-1. Contact form:
-    1. Go to the "Contact Us" page
-    2. Try to submit the empty form and verify that an error message about the required fields appears
-    3. Try to submit the form with an invalid email address and verify that a relevant error message appears
-    4. Try to submit the form with all inputs valid and verify that a success message appears.
+This process was carried out for each use case successfully.
 
-In addition, you should mention in this section how your project looks and works on different browsers and screen sizes.
-
-You should also mention in this section any interesting bugs or problems you discovered during your testing, even if you haven't addressed them yet.
-
-If this section grows too long, you may want to split it off into a separate file and link to it from here.
+In terms of browser compatibility and display, I am relatively happy with the sites performance across multiple devices. There are certain design choices that could be reconsidered, but with the exception of the Recipe Database page the site is functional in all test cases:
+- Desktop 24" 1920x1080 display
+- Macbook Pro 15"
+- iPad 4 9.7"
+- Xiaomi Air 13" (Ubuntu)
+- Honor Play 6.3"
 
 ## Deployment
 
-This section should describe the process you went through to deploy the project to a hosting platform (e.g. GitHub Pages or Heroku).
+This application is source controlled via GIT at https://github.com/Huckcity/milestone-project-four
+It has been deployed to Heroku for demonstration purposes at https://milestone-project-four.herokuapp.com/
 
-In particular, you should provide all details of the differences between the deployed version and the development version, if any, including:
-- Different values for environment variables (Heroku Config Vars)?
-- Different configuration files?
-- Separate git branch?
-
-In addition, if it is not obvious, you should also describe how to run your code locally.
+To deploy to Heroku, we had to generate a Procfile to allow Heroku to identify the type of application it was handling, and we have our required libraries exported to a requirements.txt file to allow all dependencies to be installed automatically by the host.
+To deploy locally, take the follow steps:
+- Download source code, open terminal in source folder
+- ```pip install -r requirements.txt```
+- ```python app.py```
+- Open ```http://127.0.0.1:5000```
 
 
 ## Credits
 
 ### Content
-- The text for section Y was copied from the [Wikipedia article Z](https://en.wikipedia.org/wiki/Z)
+- The recipe content was loosely pulled from [recipes.com](http://www.recipes.com) and then further populated the database with dummy content
 
 ### Media
-- The photos used in this site were obtained from ...
 
-### Acknowledgements
-
-- I received inspiration for this project from X
+- The photos used were taken from Google images
