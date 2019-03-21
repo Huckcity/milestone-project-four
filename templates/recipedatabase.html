@@ -3,7 +3,7 @@
 
 <div class="row">
 
-    <div class="col s3 db-menu-col">
+    <div class="col s6 m6 l3 db-menu-col">
         <h4>Categories</h4>
         <div class="collection">
             {% for category in categories %}
@@ -28,7 +28,7 @@
 
     </div>
 
-    <div class="col s9">
+    <div class="col s6 m6 l9">
         <table>
             <thead>
                 <tr>
@@ -44,7 +44,7 @@
                 {% for recipe in recipes %}
         
                 <tr>
-                    <td>{{ recipe['recipeName'] }}</td>
+                    <td><b>{{ recipe['recipeName'] }}</b></td>
                     <td>
                         <div class="likes-views">
                             <i class="tiny material-icons">remove_red_eye</i> {{ recipe['recipeViews'] }}
