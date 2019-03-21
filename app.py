@@ -44,7 +44,7 @@ def logout():
         return redirect(url_for('login'))
     
     for key in session.keys():
-     session.pop(key)
+        session.pop(key)
      
     return redirect(url_for('main'))
         
