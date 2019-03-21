@@ -42,9 +42,8 @@ def logout():
     
     if session.get('userID') is None:
         return redirect(url_for('login'))
-    
-    for key in session.keys():
-        session.pop(key)
+    else:
+        session.clear()
      
     return redirect(url_for('main'))
         
