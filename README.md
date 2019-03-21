@@ -93,6 +93,7 @@ In this section, you should mention all of the languages, frameworks, libraries,
 - Heroku Hosting Platform
     - ClearDB MySQL Add-On
 
+![Database Schema](https://i.ibb.co/vcYSgCD/Schema.png "DATABASE SCHEMA")
 
 ## Testing
 
