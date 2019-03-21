@@ -148,8 +148,7 @@ class Database:
                     self.con.rollback() #rollback if any exception occured
                     result = False
         
-        
-        print(removedIngredients)
+
         if len(removedIngredients) >= 1:
             for ingredient in removedIngredients:
                 
@@ -167,7 +166,7 @@ class Database:
                     self.con.rollback() #rollback if any exception occured
                     result = False
                 
-            return result
+        return result
         
     def get_user_id(self, username):
     
@@ -196,7 +195,7 @@ class Database:
         
     def get_ingredients_for_recipe(self, recipeID):
         sql = ("SELECT * FROM ingredients i INNER JOIN recipeingredients ri ON i.ingredientID = ri.ingredientID WHERE ri.recipeID = %s")
-        vals = recipeID
+        vals = (recipeID)
         self.cur.execute(sql, vals)
         result = self.cur.fetchall()
         return result
@@ -204,7 +203,15 @@ class Database:
     def get_recipe(self, recipeID):
         
         sql = ("SELECT * FROM recipes WHERE recipeID = %s")
-        vals = recipeID
+        vals = (recipeID)
+        self.cur.execute(sql, vals)
+        result = self.cur.fetchone()
+        return result
+        
+    def get_recipe_by_name(self, recipeName):
+        
+        sql = ("SELECT * FROM recipes WHERE recipeName = %s")
+        vals = (recipeName)
         self.cur.execute(sql, vals)
         result = self.cur.fetchone()
         return result

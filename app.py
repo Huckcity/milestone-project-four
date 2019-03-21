@@ -120,7 +120,7 @@ def addrecipe():
         
         recipeGF = True if request.form.get('recipeGF') else False
         recipeVegan = True if request.form.get('recipeVegan') else False
-        
+
         if Database().add_recipe(title, category, serves, description, recipeGF, recipeVegan, session['user'], ingredientsDict):
             
             return redirect(url_for('recipes'))

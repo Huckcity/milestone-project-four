@@ -115,5 +115,80 @@ class CookBookTests(unittest.TestCase):
         
         self.assertTrue(result)
         
+    def test_add_recipe(self):
+        """Test user can add a recipe"""
+ 
+        username = "testuser"
+        password = "testpassword"
+        user = Database().add_user(username, password)
         
-    
+        result = Database().add_recipe(title="test title",
+                                       category=1,
+                                       serves=2,
+                                       description="test description",
+                                       recipeGF=0,
+                                       recipeVegan=1,
+                                       username=Database().get_user_id("testuser"),
+                                       ingredients={u'31': u'always'})
+        
+        self.assertTrue(result)
+
+    def test_edit_recipe(self):
+        """Test user can edit a recipe"""
+ 
+        username = "testuser"
+        password = "testpassword"
+        user = Database().add_user(username, password)
+        
+        Database().add_recipe(title="test title",
+                            category=1,
+                            serves=2,
+                            description="test description",
+                            recipeGF=0,
+                            recipeVegan=1,
+                            username=Database().get_user_id("testuser"),
+                            ingredients={u'31': u'always'})
+
+        recipe = Database().get_recipe_by_name("test title")
+        
+        result = Database().edit_recipe(title="test edited title",
+                                        category=2,
+                                        serves=3,
+                                        description="test edited description",
+                                        recipeGF=1,
+                                        recipeVegan=0,
+                                        username="testuser",
+                                        ingredients='',
+                                        removedIngredients='',
+                                        recipeID=recipe['recipeID'])
+        
+        self.assertTrue(result)
+
+
+
+    def test_get_ingredients_for_recipe(self):
+        
+        """Test getting the ingredients for a specific recipe"""
+ 
+        username = "testuser"
+        password = "testpassword"
+        user = Database().add_user(username, password)
+        
+        Database().add_recipe(title="test title",
+                            category=1,
+                            serves=2,
+                            description="test description",
+                            recipeGF=0,
+                            recipeVegan=1,
+                            username=Database().get_user_id("testuser"),
+                            ingredients={u'31': u'always'})
+
+        recipe = Database().get_recipe_by_name("test title")
+        
+        ingredients = Database().get_ingredients_for_recipe(recipe['recipeID'])
+
+        self.assertEqual(ingredients[0]['ingredientName'], "Bacon")
+
+
+if __name__ == '__main__':
+    unittest.main()
