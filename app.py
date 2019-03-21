@@ -337,16 +337,9 @@ def home():
 @app.route("/")
 def main():
     
-    def db_query():
-        database = Database()
-        recipes = database.list_recipes('')
-        return recipes
-    
-    results = db_query()
-    
-    return render_template('index.html', result=results)
+    return render_template('index.html')
   
 if __name__ == "__main__":
     app.run(host=os.environ.get('IP'),
         port=os.environ.get('PORT', 5000),
-        debug=False)
+        debug=True)
