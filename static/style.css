@@ -98,6 +98,10 @@ main {
     overflow-y: scroll;
 }
 
+.welcome {
+    font-size: 1.4em;
+    margin-left: 10px;
+}
 
 /* MaterializeCSS Edits */
 
@@ -131,36 +135,3 @@ main {
     margin-bottom: 5px;
 }
 
-/* COLOR FIXES */
-
-/*nav {*/
-
-/* background-color: #011627 !important;*/
-
-/*}*/
-
-/*footer {*/
-
-/*    background-color: #011627 !important;*/
-
-/*}*/
-
-/*.blue {*/
-
-/*    background-color: #4286f4 !important;*/
-
-/*}*/
-
-/*.red {*/
-
-/*    background-color: #cc1848 !important;*/
-
-/*}*/
-
-/*.green {*/
-
-/*    background-color: #1f8379 !important;*/
-
-/*}*/
-
-/* COLOR FIXES */
